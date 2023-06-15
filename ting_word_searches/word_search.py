@@ -2,11 +2,22 @@ from ting_file_management.file_management import txt_importer
 
 
 def exists_word(word, instance):
+    search_by_word_list = search_by_word(word, instance)
+    for file in search_by_word_list:
+        for line in file["ocorrencias"]:
+            line.pop("conteudo")
+    return search_by_word_list
+
+
+def search_by_word(word, instance):
     files_with_word = []
     for file in instance._data:
         content = txt_importer(file)
         lines_with_word = [
-            {"linha": index + 1}
+            {
+                "linha": index + 1,
+                "conteudo": line
+            }
             for index, line in enumerate(content)
             if word.lower() in line.lower()
         ]
@@ -21,7 +32,3 @@ def exists_word(word, instance):
             )
 
     return files_with_word
-
-
-def search_by_word(word, instance):
-    """Aqui irá sua implementação"""
